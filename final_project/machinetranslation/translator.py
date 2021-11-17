@@ -5,7 +5,6 @@ Language Translator.
 '''
 
 import os
-import json
 from ibm_watson import LanguageTranslatorV3
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from dotenv import load_dotenv
@@ -15,14 +14,14 @@ load_dotenv()
 apikey = os.environ['apikey']
 url = os.environ['url']
 
-authenticator = IAMAuthenticator('{apikey}')
+authenticator = IAMAuthenticator(apikey)
 
 language_translator = LanguageTranslatorV3(
-    version='{version}',
+    version='2018-05-01',
     authenticator=authenticator
 )
 
-language_translator.set_service_url('{url}')
+language_translator.set_service_url(url)
 
 def english_to_french(english_text):
     '''This function translates English to French
@@ -37,10 +36,7 @@ def english_to_french(english_text):
         text= english_text,
         model_id='en-fr'
     ).get_result()
-    
-    french_text = json.dumps(results, indent=2, ensure_ascii=false)
-    french_text = french_text['translations'][0]['translation']
-    
+    french_text = results['translations'][0]['translation']
     return french_text
 
 def french_to_english(french_text):
@@ -56,8 +52,5 @@ def french_to_english(french_text):
         text= french_text,
         model_id='fr-en'
     ).get_result()
-    
-    english_text = json.dumps(results, indent=2, ensure_ascii=false)
-    english_text = english_text['translations'][0]['translation']
-    
+    english_text = results['translations'][0]['translation']
     return english_text
